@@ -7,21 +7,18 @@
   </head>
   <body>
     <header>
-      <h1>Coffee shop reviews</h1>
+      <h1>Audomeds Management Tool</h1>
       <h2 ng-show="currentUser">Hello {{currentUser.email}}</h2>
       <nav>
         <ul>
-          <li>
-            <a ui-sref="all-reviews" ui-sref-active="active">All reviews</a>
+          <li ng-show="currentUser">
+            <a ui-sref="all-dosages" ui-sref-active="active">All Dosages</a>
+          </li>
+          <li ng-show="currentUser">
+            <a ui-sref="all-prescriptions" ui-sref-active="active">All Prescriptions</a>
           </li>
           <li ng-hide="currentUser">
             <a ui-sref="sign-up" ui-sref-active="active">Sign up</a>
-          </li>
-          <li ng-show="currentUser">
-            <a ui-sref="my-reviews" ui-sref-active="active">My Reviews</a>
-          </li>
-          <li ng-show="currentUser">
-            <a ui-sref="add-review" ui-sref-active="active">Add Review</a>
           </li>
           <li ng-hide="currentUser">
             <a ui-sref="login" ui-sref-active="active">Log in</a>
