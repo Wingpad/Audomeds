@@ -1,0 +1,47 @@
+{
+  "name": "prescription",
+  "plural": "prescriptions",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "shape": {
+      "type": "string",
+      "required": true
+    },
+    "identifier": {
+      "type": "string",
+      "required": true
+    },
+    "quantity": {
+      "type": "number",
+      "required": true
+    },
+    "length": {
+      "type": "number",
+      "required": true
+    },
+    "width": {
+      "type": "number",
+      "required": true
+    },
+    "height": {
+      "type": "number",
+      "required": true
+    },
+    "tray": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
