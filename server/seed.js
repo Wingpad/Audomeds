@@ -1,7 +1,7 @@
 if (Prescriptions.find().count() === 0) {
   Prescriptions.insert({
   	"identifier": "44-291",
-  	"shape": "circular",
+  	"shape": "Round",
   	"name": "Ibuprofen",
     "storage": 2,
   	"width": 9.67,
@@ -12,7 +12,7 @@ if (Prescriptions.find().count() === 0) {
 
   Prescriptions.insert({
   	"identifier": "B-973",
-  	"shape": "elliptical",
+  	"shape": "Oval",
   	"name": "Adderall",
     "storage": 1,
   	"width": 10.18,
