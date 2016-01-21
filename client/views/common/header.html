@@ -8,6 +8,7 @@
         <ul class="nav navbar-nav">
           <li class="active"><a href="{{pathFor 'homepage'}}">Homepage</a></li>
           {{#if isLoggedIn}}
+            <li><a href="{{pathFor 'prescriptions'}}">Prescriptions</a></li>
             <li><a href="/" class="log-out">Log Out</a></li>
           {{else}}
             <li><a href="{{pathFor 'signup'}}">Sign Up</a></li>

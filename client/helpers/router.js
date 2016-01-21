@@ -34,6 +34,8 @@ Router.map(function() {
     }
   });
 
+  this.route('add-prescription');
+
   // Users
   this.route('login');
 
