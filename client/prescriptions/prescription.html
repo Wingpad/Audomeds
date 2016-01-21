@@ -1,0 +1,10 @@
+<template name="prescription">
+  <a href="{{pathFor 'prescriptions'}}">← Back</a>
+  {{#with prescription}}
+    <div class="prescription">
+      <h3>{{name}}</h3>
+      <p>{{identifier}}</p>
+      <h5><a href="#" class="delete">Delete</a></h5>
+    </div>
+  {{/with}}
+</template>

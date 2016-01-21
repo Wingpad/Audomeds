@@ -1,0 +1,8 @@
+<template name="prescriptions">
+  <h3>Items: </h3>
+  <ul>
+    {{#each prescriptions}}
+      <li><a href="{{pathFor "prescription"}}">{{name}}</a></li>
+    {{/each}}
+  </ul>
+</template>
