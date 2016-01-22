@@ -1,64 +1,6 @@
 <template name="addPrescription">
   <a href="{{pathFor 'prescriptions'}}">← Back</a>
-  <h2>Add Prescription</h2>
-  <form id="editor-holder">
-    <div class="form-group">
-      <label for="nameInput">Name</label>
-      <input type="text" class="form-control" id="nameInput" placeholder="Name">
-    </div>
-    <div class="form-group">
-      <label for="identifierInput">Identifier</label>
-      <input type="text" class="form-control" id="identifierInput" placeholder="Identifier">
-    </div>
-    <div class="form-group">
-      <label for="shapeSelector">Shape</label>
-      <select class="form-control" id="shapeSelector">
-        <option>Round</option>
-        <option>Triangular</option>
-        <option>Oblong</option>
-        <option>Drop</option>
-        <option>Oval</option>
-        <option>Other</option>
-      </select>
-      <p class="help-block">Select the shape that best describes your pill, if one does not quite fit choose "Other."</p>
-    </div>
-    <div class="form-group">
-      <label for="storageSelector">Pill Storage</label>
-      <select class="form-control" id="storageSelector">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="dimensionsGroup">Dimensions</label>
-      <div id="dimensionsGroup" class="row">
-        <div class='col-xs-4'>
-          <div class="input-group">
-            <span class="input-group-addon">L</span>
-            <input type="number" class="form-control" id="lengthInput">
-          </div>
-        </div>
-        <div class='col-xs-4'>
-          <div class="input-group">
-            <span class="input-group-addon">W</span>
-            <input type="number" class="form-control" id="widthInput">
-          </div>
-        </div>
-        <div class='col-xs-4'>
-          <div class="input-group">
-            <span class="input-group-addon">H</span>
-            <input type="number" class="form-control" id="heightInput">
-          </div>
-        </div>
-      </div>
-      <p class="help-block">Place pill on a flat surface. Measure from left to right, this is the width. Then measure from top to bottom, this is the length. Finally, measure the height by measuring how far it is from the table. Measure each of these quantities at their largest.</p>
-    </div>
-    <div class="form-group">
-      <label for="quantityInput">Quantity</label>
-      <input type="number" class="form-control" id="quantityInput" placeholder="Quantity">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+  <div id="editorHolder"></div>
+  <p class="text-warning hidden" id="warning">Please correct the errors present in the form.</p>
+  <button class="btn btn-primary" id="submit">Submit</button>
 </template>
