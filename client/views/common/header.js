@@ -1,11 +1,11 @@
 Template.header.helpers({
-  isLoggedIn: function () {
+  isLoggedIn: function() {
     return !!Meteor.user();
   }
 })
 
 Template.header.events({
-  'click .log-out': function () {
+  'click .log-out': function() {
     Meteor.logout();
   }
 })

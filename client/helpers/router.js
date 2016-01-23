@@ -20,6 +20,11 @@ Router.map(function() {
       return {
         prescription: Prescriptions.findOne(this.params._id)
       }
+    },
+    action: function () {
+      if (this.ready()) {
+        this.render();
+      }
     }
   });
 

@@ -1,7 +1,7 @@
 <template name="prescriptions">
   <h2>
     <a class="btn btn-default" style="float: right;" href="{{pathFor "add-prescription"}}"><span class="glyphicon glyphicon-plus"></span></a>
-    Prescriptions:
+    Prescriptions
   </h2>
   <table class="table table-striped">
     <thead>
@@ -13,14 +13,20 @@
       </tr>
     </thead>
     <tbody>
-      {{#each prescriptions}}
+      {{#if hasPrescriptions}}
+        {{#each prescriptions}}
+          <tr>
+            <td>{{name}}</td>
+            <td>{{quantity}}</td>
+            <td>{{storage}}</td>
+            <td><a href="{{pathFor "prescription"}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+          </tr>
+        {{/each}}
+      {{else}}
         <tr>
-          <td>{{name}}</td>
-          <td>{{quantity}}</td>
-          <td>{{storage}}</td>
-          <td><a href="{{pathFor "prescription"}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+          <td class="text-center" colspan="4">Nothing here to show.</td>
         </tr>
-      {{/each}}
+      {{/if}}
     </tbody>
   </table>
 </template>

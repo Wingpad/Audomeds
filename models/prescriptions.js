@@ -13,9 +13,16 @@ Prescriptions.allow({
 });
 
 Meteor.methods({
+  editPrescription: function(prescription) {
+    if (can.editPrescription(Meteor.user(), prescription)) {
+      Prescriptions.update(prescription._id, prescription);
+    }
+  },
   createPrescription: function(prescription) {
-    if (can.createPrescription(Meteor.user()))
+    if (can.createPrescription(Meteor.user())) {
+      prescription.userId = Meteor.user()._id;
       Prescriptions.insert(prescription);
+    }
   },
   removePrescription: function(prescription) {
     if (can.removePrescription(Meteor.user(), prescription)) {

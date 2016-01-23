@@ -2,11 +2,16 @@
   "title":"Prescription",
   "type":"object",
   "properties":{
+    "name":{
+      "type":"string",
+      "minLength":1
+    },
     "identifier":{
       "type":"string",
       "minLength":1
     },
     "shape":{
+      "description":"Select the shape that best describes your pill, if one does not quite fit choose 'Other.'",
       "enum":[
         "Round",
         "Triangular",
@@ -16,16 +21,13 @@
         "Other"
       ]
     },
-    "name":{
-      "type":"string",
-      "minLength":1
-    },
     "storage":{
       "enum":[1,2,3,4]
     },
     "dimensions":{
       "title":"Dimensions",
-      "type": "object",
+      "type":"object",
+      "description":"Place pill on a flat surface. Measure from left to right, this is the width. Then measure from top to bottom, this is the length. Finally, measure the height by measuring how far it is from the table. Measure each of these quantities at their largest.",
       "properties": {
         "length":{
           "type":"number",
