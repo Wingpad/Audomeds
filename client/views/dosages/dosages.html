@@ -1,0 +1,32 @@
+<template name="dosages">
+  <h2>
+    <a class="btn btn-default" style="float: right;" href="{{pathFor "add-dosage"}}"><span class="glyphicon glyphicon-plus"></span></a>
+    Dosages
+  </h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Storage #</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#if hasDosages}}
+        {{#each dosages}}
+          <tr>
+            <td>{{name}}</td>
+            <td>{{quantity}}</td>
+            <td>{{storage}}</td>
+            <td><a href="{{pathFor "dosage"}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+          </tr>
+        {{/each}}
+      {{else}}
+        <tr>
+          <td class="text-center" colspan="4">Nothing here to show.</td>
+        </tr>
+      {{/if}}
+    </tbody>
+  </table>
+</template>

@@ -16,6 +16,7 @@ Template.prescription.rendered = function() {
       theme: 'bootstrap3',
       disable_edit_json: true,
       disable_properties: true,
+      no_additional_properties: true,
       show_errors: 'always',
       schema: schema
     });
@@ -36,8 +37,8 @@ Template.prescription.events({
     } else {
       var prescription = editor.getValue();
 
-      // prescription._id    = this.prescription._id;
-      // prescription.userId = this.prescription.userId;
+      prescription._id    = this.prescription._id;
+      prescription.userId = this.prescription.userId;
 
       Meteor.call('editPrescription', prescription, function(error, result) {
         alert('Item updated.');

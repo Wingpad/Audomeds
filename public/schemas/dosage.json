@@ -1,0 +1,36 @@
+{
+   "title":"Dosage",
+   "type":"object",
+   "properties":{
+      "name":{
+         "type":"string"
+      },
+      "enabled":{
+         "type":"boolean"
+      },
+      "scheduledTime":{
+         "type":"string"
+      },
+      "prescriptions":{
+         "title":"Prescriptions",
+         "type":"array",
+         "items":{
+            "type":"object",
+            "properties":{
+               "prescription_id":{
+                  "type":"string"
+               },
+               "quantity":{
+                  "type":"integer"
+               }
+            }
+         }
+      }
+   },
+   "required":[
+      "name",
+      "enabled",
+      "scheduledTime",
+      "prescriptions"
+   ]
+}

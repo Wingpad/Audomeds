@@ -1,0 +1,73 @@
+<template name="addDosage">
+  <a href="{{pathFor 'dosages'}}">← Back</a>
+  <h3>Dosage</h3>
+  <form id="editor-holder" class="well well-sm">
+    <div class="form-group">
+      <label for="nameInput">Name</label>
+      <input type="text" class="form-control" id="nameInput" placeholder="Name">
+    </div>
+    <div class="form-group">
+      <label for="prescriptionSelector">Prescriptions</label>
+      {{#if hasPrescriptions}}
+        <div class="input-group">
+          <select class="form-control" id="prescriptionSelector">
+            <option></option>
+            {{#each prescriptions}}
+              <option id="{{_id}}">{{name}}</option>
+            {{/each}}
+          </select>
+
+          <span class="input-group-btn">
+            <a class="btn btn-default" id="addPrescription" tabindex="-1"><span class="glyphicon glyphicon-plus"></span></a>
+          </span>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Quantity</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#if hasAddedPrescriptions}}
+              {{#each addedPrescriptions}}
+                <tr>
+                  <td>{{name}}</td>
+                  <select class="form-control" id="prescriptionSelector">
+                    <option></option>
+                    {{#each quantities}}
+                      <option>{{this}}</option>
+                    {{/each}}
+                  </select>
+                  <td><a class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></a></td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr>
+                <td class="text-center" colspan="3">Nothing here to show.</td>
+              </tr>
+            {{/if}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="help-block col-xs-1">You need to add your prescriptions first.</p>
+      {{/if}}
+    </div>
+    <!-- <div class="form-group">
+      <label for="storageSelector">Pill Storage</label>
+      <select class="form-control" id="storageSelector">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </div> -->
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" id="enabled"> Enabled
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</template>

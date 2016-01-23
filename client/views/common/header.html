@@ -9,6 +9,7 @@
           <li class="{{isActiveRoute 'homepage'}}"><a href="{{pathFor 'homepage'}}">Homepage</a></li>
           {{#if isLoggedIn}}
             <li class="{{isActivePath regex='^\\/prescriptions'}}"><a href="{{pathFor 'prescriptions'}}">Prescriptions</a></li>
+            <li class="{{isActivePath regex='^\\/dosages'}}"><a href="{{pathFor 'dosages'}}">Dosages</a></li>
             <li><a href="/" class="log-out">Logout</a></li>
           {{else}}
             <li class="{{isActiveRoute 'signup'}}"><a href="{{pathFor 'signup'}}">Signup</a></li>
