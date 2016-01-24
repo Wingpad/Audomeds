@@ -7,6 +7,21 @@
       <input type="text" class="form-control" id="nameInput" placeholder="Name">
     </div>
     <div class="form-group">
+      <label for="timeGroup">Scheduled Time</label>
+      <div class="form-inline" id="timeGroup">
+        <div class="form-group">
+          Every
+          <input type="text" class="form-control" id="dayInput" placeholder="day">
+        </div>
+        <div class="form-group">
+          at
+          <input type="text" class="form-control" id="timeInput" placeholder="time">
+          .
+        </div>
+        <p class="help-block">You may put "day" to dispense daily or enter individual weekdays (UMTWRFS). Times should be entered in 24-hour format as a comma-separated list (e.g. 9:00, 23:00).</p>
+      </div>
+    </div>
+    <div class="form-group">
       <label for="prescriptionSelector">Prescriptions</label>
       {{#if hasPrescriptions}}
         <div class="input-group">
@@ -22,6 +37,9 @@
           </span>
         </div>
         <table class="table">
+          <col width="80%">
+          <col width="10%">
+          <col width="10%">
           <thead>
             <tr>
               <th>Name</th>
@@ -32,7 +50,7 @@
           <tbody>
             {{#if hasAddedPrescriptions}}
               {{#each addedPrescriptions}}
-                <tr>
+                <tr id="{{concat 'row' _id}}">
                   <td>{{name}}</td>
                   <select class="form-control" id="prescriptionSelector">
                     <option></option>
@@ -40,7 +58,7 @@
                       <option>{{this}}</option>
                     {{/each}}
                   </select>
-                  <td><a class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></a></td>
+                  <td class="text-center" style="padding: 0;"><a class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></a></td>
                 </tr>
               {{/each}}
             {{else}}
@@ -51,23 +69,24 @@
           </tbody>
         </table>
       {{else}}
-        <p class="help-block col-xs-1">You need to add your prescriptions first.</p>
+        <p class="help-block">You need to add your prescriptions first.</p>
       {{/if}}
     </div>
-    <!-- <div class="form-group">
-      <label for="storageSelector">Pill Storage</label>
-      <select class="form-control" id="storageSelector">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select>
-    </div> -->
     <div class="checkbox">
       <label>
-        <input type="checkbox" id="enabled"> Enabled
+        <input type="checkbox" id="enabled" checked> Enabled
       </label>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    {{#if hasErrors}}
+      <p class="text-danger">
+        Please correct the following errors:
+        <ul>
+          {{#each errors}}
+            <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </p>
+    {{/if}}
+    <button id="submit" type="submit" class="btn btn-primary">Submit</button>
   </form>
 </template>
