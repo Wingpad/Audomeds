@@ -10,7 +10,9 @@ Template.dosages.helpers({
 Template.dosages.rendered = function() {
   this.data.dosages.forEach(function(dosage) {
     var elem = document.querySelector('#' + dosage._id);
-    var switchery = new Switchery(elem);
+    var switchery = new Switchery(elem, {
+      color: '#18bc9c'
+    });
 
     elem.onchange = function(e) {
       var id      = elem.id;

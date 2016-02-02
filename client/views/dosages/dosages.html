@@ -1,6 +1,6 @@
 <template name="dosages">
   <h2>
-    <a class="btn btn-default" style="float: right;" href="{{pathFor "add-dosage"}}"><span class="glyphicon glyphicon-plus"></span></a>
+    <a class="btn btn-default" style="float: right;" href="{{pathFor "add-dosage"}}"><span class="fa fa-plus"></span></a>
     Dosages
   </h2>
   <table class="table table-striped">
@@ -17,7 +17,7 @@
           <tr>
             <td class="valign-cell">{{name}}</td>
             <td><input type="checkbox" id="{{_id}}" {{isChecked enabled}}/></td>
-            <td class="valign-cell"><a href="{{pathFor "dosage"}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            <td class="valign-cell"><a href="{{pathFor "dosage"}}"><span class="fa fa-pencil"></span></a></td>
           </tr>
         {{/each}}
       {{else}}

@@ -22,6 +22,7 @@ less                    # Bootstrap and other Stylesheets
 iron:router             # Routing with Templates and Niceties
 accounts-base           # Accounts n' Stuff
 accounts-password       #
-huttonr:bootstrap3
 zimme:active-route
 abpetkov:switchery
+fortawesome:fontawesome
+bootswatch:flatly

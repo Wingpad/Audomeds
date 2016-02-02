@@ -1,6 +1,6 @@
 <template name="prescriptions">
   <h2>
-    <a class="btn btn-default" style="float: right;" href="{{pathFor "add-prescription"}}"><span class="glyphicon glyphicon-plus"></span></a>
+    <a class="btn btn-default" style="float: right;" href="{{pathFor "add-prescription"}}"><span class="fa fa-plus"></span></a>
     Prescriptions
   </h2>
   <table class="table table-striped">
@@ -19,7 +19,7 @@
             <td>{{name}}</td>
             <td>{{quantity}}</td>
             <td>{{storage}}</td>
-            <td><a href="{{pathFor "prescription"}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            <td><a href="{{pathFor "prescription"}}"><span class="fa fa-pencil"></span></a></td>
           </tr>
         {{/each}}
       {{else}}
