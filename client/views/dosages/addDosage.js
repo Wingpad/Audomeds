@@ -1,7 +1,28 @@
-var addedPrescriptions = [];
+var addedPrescriptions = {
+  data: [],
+  dep: new Deps.Dependency,
+  get: function() {
+    this.dep.depend();
+    return this.data;
+  },
+  length: function() {
+    this.dep.depend();
+    return this.data.length;
+  },
+  push: function(prescription) {
+    this.data.push(prescription);
+    this.dep.changed();
+    return this.data;
+  },
+  splice: function(x, y) {
+    this.data.splice(x, y);
+    this.dep.changed();
+    return this.data;
+  }
+};
+
 var dayFormat  = /^(day|[umtwrfs]+)$/i;
 var timeFormat = /^((([01]?[0-9]|2[0-3]):[0-5][0-9],\s*)*(([01]?[0-9]|2[0-3]):[0-5][0-9]))$/;
-Session.set('addedPrescriptions', addedPrescriptions);
 Session.set('errors', []);
 
 Template.addDosage.helpers({
@@ -9,13 +30,13 @@ Template.addDosage.helpers({
     return this.prescriptions.count() > 0;
   },
   hasAddedPrescriptions: function() {
-    return Session.get('addedPrescriptions').length > 0;
+    return addedPrescriptions.length() > 0;
   },
   hasErrors: function() {
     return Session.get('errors').length > 0;
   },
   addedPrescriptions: function() {
-    return Session.get('addedPrescriptions');
+    return addedPrescriptions.get();
   },
   errors: function() {
     return Session.get('errors');
@@ -36,12 +57,9 @@ Template.addDosage.events({
       }
       var prescription = Prescriptions.findOne(selectedId);
       addedPrescriptions.push(prescription);
-      Session.set('addedPrescriptions', addedPrescriptions);
       Meteor.defer(function() {
         $('#row'+selectedId+' td a').click(function() {
-          var index = indexOfById(selectedId);
-          addedPrescriptions.splice(index, 1);
-          Session.set('addedPrescriptions', addedPrescriptions);
+          addedPrescriptions.splice(indexOfById(selectedId), 1);
           alert('Prescription "' + prescription.name + '" removed.');
         });
       });
@@ -64,7 +82,7 @@ Template.addDosage.events({
       scheduledTime: day + '|' + time
     };
 
-    if (addedPrescriptions.length === 0) {
+    if (addedPrescriptions.data.length === 0) {
       errors.push('Please add prescriptions to the dosage.');
     }
 
@@ -76,7 +94,7 @@ Template.addDosage.events({
       errors.push('Please correct the Scheduled Time.');
     }
 
-    addedPrescriptions.forEach(function(prescription) {
+    addedPrescriptions.data.forEach(function(prescription) {
       var tuple = {
         prescriptionId: prescription._id,
         quantity: $('#row'+prescription._id+' select option:selected').val()
@@ -101,8 +119,8 @@ Template.addDosage.events({
 });
 
 function indexOfById(id) {
-  for (var i = 0; i < addedPrescriptions.length; i++) {
-    if (addedPrescriptions[i]._id === id) {
+  for (var i = 0; i < addedPrescriptions.data.length; i++) {
+    if (addedPrescriptions.data[i]._id === id) {
       return i;
     }
   }
