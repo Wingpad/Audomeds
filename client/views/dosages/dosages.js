@@ -9,17 +9,19 @@ Template.dosages.helpers({
 
 Template.dosages.rendered = function() {
   this.data.dosages.forEach(function(dosage) {
-    var elem = document.querySelector('#' + dosage._id);
+    var elem = document.querySelector('#chkbox' + dosage._id);
     var switchery = new Switchery(elem, {
       color: '#18bc9c'
     });
 
     elem.onchange = function(e) {
-      var id      = elem.id;
+      var id      = dosage._id;
       var enabled = elem.checked;
 
       Meteor.call('setDosageEnabled', id, enabled, function(error, result) {
-        console.log(error);
+        if(error) {
+          alert(error);
+        }
       });
     };
   });
