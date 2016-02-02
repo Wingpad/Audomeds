@@ -1,7 +1,7 @@
 <template name="addDosage">
   <a href="{{pathFor 'dosages'}}">← Back</a>
   <h3>Dosage</h3>
-  <form id="editor-holder" class="well well-sm">
+  <div id="editor-holder" class="well well-sm">
     <div class="form-group">
       <label for="nameInput">Name</label>
       <input type="text" class="form-control" id="nameInput" placeholder="Name">
@@ -87,6 +87,6 @@
         </ul>
       </p>
     {{/if}}
-    <button id="submit" type="submit" class="btn btn-primary">Submit</button>
-  </form>
+  </div>
+  <button id="submit" type="submit" class="btn btn-primary">Submit</button>
 </template>

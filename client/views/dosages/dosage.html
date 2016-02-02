@@ -1,4 +1,93 @@
 <template name="dosage">
   <a href="{{pathFor 'dosages'}}">← Back</a>
-  <p>This feature is not yet available.</p>
+  <h3>Dosage</h3>
+  <div id="editor-holder" class="well well-sm">
+    <div class="form-group">
+      <label for="nameInput">Name</label>
+      <input type="text" class="form-control" id="nameInput" placeholder="Name">
+    </div>
+    <div class="form-group">
+      <label for="timeGroup">Scheduled Time</label>
+      <div class="form-inline" id="timeGroup">
+        <div class="form-group">
+          Every
+          <input type="text" class="form-control" id="dayInput" placeholder="day">
+        </div>
+        <div class="form-group">
+          at
+          <input type="text" class="form-control" id="timeInput" placeholder="time">
+          .
+        </div>
+        <p class="help-block">You may put "day" to dispense daily or enter individual weekdays (UMTWRFS). Times should be entered in 24-hour format as a comma-separated list (e.g. 9:00, 23:00).</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="prescriptionSelector">Prescriptions</label>
+      {{#if hasPrescriptions}}
+        <div class="input-group">
+          <select class="form-control" id="prescriptionSelector">
+            <option></option>
+            {{#each prescriptions}}
+              <option id="{{_id}}">{{name}}</option>
+            {{/each}}
+          </select>
+
+          <span class="input-group-btn">
+            <a class="btn btn-default" id="addPrescription" tabindex="-1"><span class="glyphicon glyphicon-plus"></span></a>
+          </span>
+        </div>
+        <table class="table">
+          <col width="80%">
+          <col width="10%">
+          <col width="10%">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Quantity</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#if hasAddedPrescriptions}}
+              {{#each addedPrescriptions}}
+                <tr id="{{concat 'row' _id}}">
+                  <td>{{name}}</td>
+                  <select class="form-control" id="prescriptionSelector">
+                    <option></option>
+                    {{#each quantities}}
+                      <option value="{{this}}">{{this}}</option>
+                    {{/each}}
+                  </select>
+                  <td class="text-center" style="padding: 0;"><a class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></a></td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr>
+                <td class="text-center" colspan="3">Nothing here to show.</td>
+              </tr>
+            {{/if}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="help-block">You need to add your prescriptions first.</p>
+      {{/if}}
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" id="enabled" checked> Enabled
+      </label>
+    </div>
+    {{#if hasErrors}}
+      <p class="text-danger">
+        Please correct the following errors:
+        <ul>
+          {{#each errors}}
+            <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </p>
+    {{/if}}
+  </div>
+  <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+  <a class="btn btn-default" style="float: right;" id="delete" href="#"><span class="glyphicon glyphicon-trash"></span></a>
 </template>

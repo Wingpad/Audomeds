@@ -1,10 +1,38 @@
 var addedPrescriptions = [];
 var dayFormat  = /^(day|[umtwrfs]+)$/i;
 var timeFormat = /^((([01]?[0-9]|2[0-3]):[0-5][0-9],\s*)*(([01]?[0-9]|2[0-3]):[0-5][0-9]))$/;
-Session.set('addedPrescriptions', addedPrescriptions);
 Session.set('errors', []);
+Session.set('addedPrescriptions', addedPrescriptions);
 
-Template.addDosage.helpers({
+Template.dosage.rendered = function() {
+  // Grab the dosage
+  var dosage = this.data.dosage;
+  // Get the prescriptions
+  addedPrescriptions = [];
+  dosage.prescriptions.forEach(function(tuple) {
+    // Push the prescription onto the stack
+    addedPrescriptions.push(Prescriptions.findOne({_id: tuple.prescriptionId}));
+    // Defer quantity setting
+    Meteor.defer(function() {
+      $('#row'+tuple.prescriptionId+' select option[value="'+tuple.quantity+'"]').attr('selected', 'selected');
+    });
+  });
+  Session.set('addedPrescriptions', addedPrescriptions);
+  // Set the other fields
+  $('#nameInput').val(dosage.name);
+  // Check/Uncheck the dosage
+  if (dosage.enabled) {
+    $('#enabled').attr('checked', 'checked');
+  } else {
+    $('#enabled').removeAttr('checked');
+  }
+  // Set the time
+  var tmp = dosage.scheduledTime.split('|');
+  $('#dayInput').val(tmp[0]);
+  $('#timeInput').val(tmp[1]);
+}
+
+Template.dosage.helpers({
   hasPrescriptions: function() {
     return this.prescriptions.count() > 0;
   },
@@ -25,7 +53,7 @@ Template.addDosage.helpers({
   ]
 });
 
-Template.addDosage.events({
+Template.dosage.events({
   'click #addPrescription': function(e, instance) {
     var selectedId = $('#prescriptionSelector option:selected').attr('id');
 
@@ -61,6 +89,7 @@ Template.addDosage.events({
       enabled: $('#enabled').is(':checked'),
       prescriptions: [],
       userId: Meteor.user()._id,
+      _id: this.dosage._id,
       scheduledTime: day + '|' + time
     };
 
@@ -92,11 +121,19 @@ Template.addDosage.events({
     Session.set('errors', errors);
 
     if (!errors.length) {
-      Meteor.call('createDosage', dosage, function(error, result) {
-        alert('Item created.');
+      Meteor.call('editDosage', dosage, function(error, result) {
+        alert('Item updated.');
         Router.go('/dosages');
       });
     }
+  },
+  'click #delete': function(e, instance) {
+    var item = this.dosage;
+
+    Meteor.call('removeDosage', item, function(error, result) {
+      alert('Item deleted.');
+      Router.go('/dosages');
+    });
   }
 });
 

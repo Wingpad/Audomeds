@@ -13,6 +13,11 @@ Dosages.allow({
 });
 
 Meteor.methods({
+  editDosage: function(dosage) {
+    if (can.editDosage(Meteor.user(), dosage)) {
+      Dosages.update(dosage._id, dosage);
+    }
+  },
   createDosage: function(dosage) {
     if (can.createDosage(Meteor.user()))
       Dosages.insert(dosage);
@@ -23,5 +28,12 @@ Meteor.methods({
     } else {
       throw new Meteor.Error(403, 'You do not have the rights to delete this dosage.')
     }
+  },
+  setDosageEnabled: function(id, enabled) {
+    Dosages.update(id, {
+      $set: {
+        enabled: enabled
+      }
+    });
   }
 });

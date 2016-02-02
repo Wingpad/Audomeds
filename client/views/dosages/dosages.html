@@ -15,9 +15,9 @@
       {{#if hasDosages}}
         {{#each dosages}}
           <tr>
-            <td>{{name}}</td>
-            <td>{{enabled}}</td>
-            <td><a href="{{pathFor "dosage"}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            <td class="valign-cell">{{name}}</td>
+            <td><input type="checkbox" id="{{_id}}" checked="{{isChecked enabled}}"/></td>
+            <td class="valign-cell"><a href="{{pathFor "dosage"}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
           </tr>
         {{/each}}
       {{else}}

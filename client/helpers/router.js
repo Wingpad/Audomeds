@@ -45,11 +45,13 @@ Router.map(function() {
   this.route('dosage', {
     path: '/dosages/:_id',
     waitOn: function() {
-      return Meteor.subscribe('singleDosage', this.params._id);
+      return [Meteor.subscribe('singleDosage', this.params._id),
+              Meteor.subscribe('allPrescriptions')];
     },
     data: function() {
       return {
-        dosage: Dosages.findOne(this.params._id)
+        dosage: Dosages.findOne(this.params._id),
+        prescriptions: Prescriptions.find()
       }
     },
     action: function () {
@@ -66,6 +68,11 @@ Router.map(function() {
     data: function() {
       return {
         dosages: Dosages.find()
+      }
+    },
+    action: function () {
+      if (this.ready()) {
+        this.render();
       }
     }
   });
