@@ -34,7 +34,9 @@ Router.map(function() {
     },
     data: function() {
       return {
-        prescriptions: Prescriptions.find()
+        prescriptions: Prescriptions.find({
+          userId: Meteor.userId()
+        })
       }
     }
   });
@@ -51,7 +53,9 @@ Router.map(function() {
     data: function() {
       return {
         dosage: Dosages.findOne(this.params._id),
-        prescriptions: Prescriptions.find()
+        prescriptions: Prescriptions.find({
+          userId: Meteor.userId()
+        })
       }
     },
     action: function () {
@@ -67,7 +71,9 @@ Router.map(function() {
     },
     data: function() {
       return {
-        dosages: Dosages.find()
+        dosages: Dosages.find({
+          userId: Meteor.userId()
+        })
       }
     },
     action: function () {
@@ -83,7 +89,9 @@ Router.map(function() {
     },
     data: function() {
       return {
-        prescriptions: Prescriptions.find()
+        prescriptions: Prescriptions.find({
+          userId: Meteor.userId()
+        })
       }
     }
   });

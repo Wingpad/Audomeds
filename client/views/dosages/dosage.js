@@ -88,7 +88,7 @@ Template.dosage.events({
       name: $('#nameInput').val(),
       enabled: $('#enabled').is(':checked'),
       prescriptions: [],
-      userId: Meteor.user()._id,
+      userId: Meteor.userId(),
       _id: this.dosage._id,
       scheduledTime: day + '|' + time
     };

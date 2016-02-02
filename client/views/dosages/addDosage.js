@@ -60,7 +60,7 @@ Template.addDosage.events({
       name: $('#nameInput').val(),
       enabled: $('#enabled').is(':checked'),
       prescriptions: [],
-      userId: Meteor.user()._id,
+      userId: Meteor.userId(),
       scheduledTime: day + '|' + time
     };
 
