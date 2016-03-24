@@ -8,21 +8,79 @@ from collections import namedtuple
 USERNAME = 'wingpad'
 PASSWORD = 'nullandboyde'
 SERVER   = 'ws://127.0.0.1:3000/websocket'
+client   = MeteorClient(SERVER)
 
-client = MeteorClient(SERVER)
+# How do we handle changes that are close to the dispensing period?
+# Keep a copy, then wipe the schedule. If the dosage is not scheduled for today... just add it
+#   Otherwise, check if the time has already been passed... if it has skip it
+#   If the time is close to the current time, check to see if it's already been/being dispensed
+#       if it has, then skip it
+#   Otherwise just add it...
 
-global stopped, userId, prescriptions, dosages, schedule
+class Scheduler:
+    def __init__(self):
+        self.schedule     = []
+        self.scheduleLock = Lock()
+        # Start the dispensing task
+        Thread(target = self.dispense, args = (self)).start()
+    def refresh_schedule(self):
+        threadLock.acquire()
+        if dosages is None or prescriptions is None:
+            threadLock.release()
+            return
+        for dosage in dosages:
+            daysTimes = dosage.get('scheduledTime').split('|')
+            times = daysTimes[1].split(',')
+            if (daysTimes[0] == 'day'):
+                daysTimes[0] = 'UMTWRFS'
+            for prescription in dosage.get('prescriptions'):
+                for day in daysTimes[0]:
+                    for time in times:
+                        self.add_dispensing(prescription.get('prescriptionId'), day, time)
+        threadLock.release()
+    def add_dispensing(self, prescriptionId, day, time):
+        self.scheduleLock.acquire()
+        day = convert_day_to_num(day)
+        if day == datetime.today().weekday():
+            print("Scheduled for today.")
+        self.schedule.append(Dispensing(prescriptionId, day, time))
+        self.scheduleLock.release()
+    # Periodic Task to Handle Dispensing
+    def dispense(self):
+        while not stopped:
+            # Print the current time
+            self.scheduleLock.acquire()
+            print(time.ctime())
+            self.scheduleLock.release()
+            # Wait til' the next minute comes around
+            sleeptime = 60 - datetime.utcnow().second
+            time.sleep(sleeptime)
+
+class Dispensing:
+    def __init__(self, prescriptionId, day, time):
+        self.hasDispensed = False
+        print('Scheduling {} for {} on {}'.format(prescriptionId, time, day))
+
 userId = None
 dosages = None
 prescriptions = None
 stopped = False
-schedule = None
-
 threadLock = Lock()
-
-ScheduleItem = namedtuple('ScheduleItem', ['time', 'storage', 'quantity'])
+scheduler = Scheduler()
 
 print('* STARTING')
+
+def convert_day_to_num(day):
+    switcher = {
+        "U": 6,
+        "M": 0,
+        "T": 1,
+        "W": 2,
+        "R": 3,
+        "F": 4,
+        "S": 5
+    }
+    return switcher.get(day, None)
 
 def subscribed(subscription):
     print('* SUBSCRIBED {}'.format(subscription))
@@ -40,7 +98,8 @@ def changed(collection, id=None, fields=None, cleared=None):
         dosages = client.find('dosages', selector={'userId': userId, 'enabled': True})
         print('* DOSAGES - data: {}'.format(str(dosages)))
     threadLock.release()
-    refresh_schedule()
+    # Then refresh to use the newest data
+    scheduler.refresh_schedule()
 
 def connected():
     print('* CONNECTED')
@@ -60,33 +119,6 @@ def logged_in(error, data):
         client.subscribe('allPrescriptions')
         client.subscribe('allDosages')
 
-def refresh_schedule():
-	if dosages is None or prescriptions is None:
-		return
-
-	threadLock.acquire()
-	schedule = []
-	for dosage in dosages:
-		daysTimes = dosage.get('scheduledTime').split('|')
-		times = daysTimes[1].split(',')
-		if (daysTimes[0] == 'day'):
-			daysTimes[0] = 'UMTWRFS'
-		for prescription in dosage.get('prescriptions'):
-			for day in daysTimes[0]:
-				for time in times:
-					print('Scheduling {} for {} on {}'.format(prescription.get('prescriptionId'), time, day))
-	threadLock.release()
-	
-# Periodic Task to Handle Dispensing
-def dispense():
-    # Print the current time
-    print(time.ctime())
-    # Restart the task in a minute
-    if not stopped:
-        sleeptime = 60 - datetime.utcnow().second
-        time.sleep(sleeptime)
-        Thread(dispense()).start()
-
 # Register callbacks
 client.on('added', changed)
 client.on('failed', failed)
@@ -97,10 +129,6 @@ client.on('subscribed', subscribed)
 
 # Connect the Client to the server
 client.connect()
-
-# Start the dispensing task
-
-Thread(dispense()).start()
 
 # a (sort of) hacky way to keep the client alive
 # ctrl + c to kill the script
