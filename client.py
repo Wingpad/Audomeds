@@ -1,12 +1,13 @@
 import time
 
 from MeteorClient import MeteorClient
-from datetime import datetime
+from datetime import datetime, timedelta
 from threading import Thread, Lock
 from collections import namedtuple
+from operator import attrgetter
 
 USERNAME = 'wingpad'
-PASSWORD = 'nullandboyde'
+PASSWORD = 'd104rtxxx'
 SERVER   = 'ws://127.0.0.1:3000/websocket'
 client   = MeteorClient(SERVER)
 
@@ -19,12 +20,15 @@ client   = MeteorClient(SERVER)
 
 class Scheduler:
     def __init__(self):
-        self.schedule     = []
-        self.scheduleLock = Lock()
+        # Initialize the schedule
+        self.schedule = []
         # Start the dispensing task
-        Thread(target = self.dispense, args = (self)).start()
+        Thread(target = self.dispense).start()
     def refresh_schedule(self):
         threadLock.acquire()
+        # In reality we shouldn't just naively wipe out the old schedule
+        # like this
+        self.schedule = []
         if dosages is None or prescriptions is None:
             threadLock.release()
             return
@@ -36,39 +40,51 @@ class Scheduler:
             for prescription in dosage.get('prescriptions'):
                 for day in daysTimes[0]:
                     for time in times:
-                        self.add_dispensing(prescription.get('prescriptionId'), day, time)
+                        self.add_dispensing(prescription.get('prescriptionId'), prescription.get('quantity'), day, time)
+        self.schedule = sorted(self.schedule, key=attrgetter('date'))
         threadLock.release()
-    def add_dispensing(self, prescriptionId, day, time):
-        self.scheduleLock.acquire()
-        day = convert_day_to_num(day)
-        if day == datetime.today().weekday():
-            print("Scheduled for today.")
-        self.schedule.append(Dispensing(prescriptionId, day, time))
-        self.scheduleLock.release()
+    def add_dispensing(self, prescriptionId, quantity, day, time):
+        day  = convert_day_to_num(day)
+        time = map(int, time.split(':'))
+        date = datetime.today().replace(hour=time[0], minute=time[1], second=0, microsecond=0)
+        # More checks should be here in order to verify that we aren't
+        # scheduling something that's already been dispensed
+        if day != date.weekday():
+            n = (day - date.weekday()) % 7
+            date = date + timedelta(days=n)
+        # And add it to the schedule
+        self.schedule.append(Dispensing(prescriptionId, quantity, date))
     # Periodic Task to Handle Dispensing
     def dispense(self):
         while not stopped:
             # Print the current time
-            self.scheduleLock.acquire()
-            print(time.ctime())
-            self.scheduleLock.release()
+            threadLock.acquire()
+            now = datetime.today().replace(second=0, microsecond=0)
+            print('The time is now {}.'.format(now))
+            for dispensing in self.schedule:
+                if (dispensing.date > now):
+                    break
+                elif (dispensing.date == now):
+                    print('Scheduled to dispense {}.'.format(dispensing))
+            threadLock.release()
             # Wait til' the next minute comes around
             sleeptime = 60 - datetime.utcnow().second
             time.sleep(sleeptime)
 
 class Dispensing:
-    def __init__(self, prescriptionId, day, time):
-        self.hasDispensed = False
-        print('Scheduling {} for {} on {}'.format(prescriptionId, time, day))
+    def __init__(self, prescriptionId, quantity, date):
+        self.date = date
+        self.quantity = quantity
+        self.prescriptionId = prescriptionId
+    def __str__(self):
+        return '{}x of {} on {}'.format(self.quantity, self.prescriptionId, self.date)
 
 userId = None
 dosages = None
-prescriptions = None
 stopped = False
 threadLock = Lock()
+prescriptions = None
 scheduler = Scheduler()
-
-print('* STARTING')
 
 def convert_day_to_num(day):
     switcher = {
@@ -88,18 +104,22 @@ def subscribed(subscription):
     changed(subscription)
 
 def changed(collection, id=None, fields=None, cleared=None):
-    threadLock.acquire()
     if (collection == 'prescriptions'):
+        threadLock.acquire()
         global prescriptions
         prescriptions = client.find('prescriptions', selector={'userId': userId})
         print('* PRESCRIPTIONS - data: {}'.format(str(prescriptions)))
+        threadLock.release()
     elif (collection == 'dosages'):
+        threadLock.acquire()
         global dosages
-        dosages = client.find('dosages', selector={'userId': userId, 'enabled': True})
+        # Print the data
         print('* DOSAGES - data: {}'.format(str(dosages)))
-    threadLock.release()
-    # Then refresh to use the newest data
-    scheduler.refresh_schedule()
+        # Update the dosages
+        dosages = client.find('dosages', selector={'userId': userId, 'enabled': True})
+        # Then refresh everything to use the newest data
+        threadLock.release()
+        scheduler.refresh_schedule()
 
 def connected():
     print('* CONNECTED')
@@ -126,6 +146,8 @@ client.on('changed', changed)
 client.on('removed', changed)
 client.on('connected', connected)
 client.on('subscribed', subscribed)
+
+print('* STARTING')
 
 # Connect the Client to the server
 client.connect()
