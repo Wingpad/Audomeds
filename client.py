@@ -7,8 +7,8 @@ from collections import namedtuple
 from operator import attrgetter
 
 USERNAME = 'wingpad'
-PASSWORD = 'd104rtxxx'
-SERVER   = 'ws://127.0.0.1:3000/websocket'
+PASSWORD = 'nullandboyde'
+SERVER   = 'ws://152.228.80.179:3000/websocket'
 client   = MeteorClient(SERVER)
 
 # How do we handle changes that are close to the dispensing period?
